@@ -1,0 +1,24 @@
+{
+  "name": "viztable",
+  "version": "1.0.0",
+  "description": "table of items with extents",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jufa/viztable.git"
+  },
+  "keywords": [
+    "d3",
+    "table",
+    "bounds"
+  ],
+  "author": "Jeremy Kuzub",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jufa/viztable/issues"
+  },
+  "homepage": "https://github.com/jufa/viztable#readme"
+}
