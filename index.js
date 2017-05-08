@@ -24,15 +24,15 @@ document.addEventListener('DOMContentLoaded', function () {
 }.bind(this));
 
 function render(data, state) {
+  enterRows();
+  updateRows();
+}
+
+function updateRows(rows) { 
   var rows = d3.select('#viz-table')
     .selectAll('.row')
     .data(data, function(d,i) { return d.tag });
 
-  enterRows(rows);
-  updateRows(rows);
-}
-
-function updateRows(rows) { 
   rows.selectAll('.bar')
     .transition()
     .attr('width', function(d){
@@ -45,16 +45,6 @@ function updateRows(rows) {
       return Math.pow((1.0 - d.max + d.min), 2)
     });
 
-  rows.sort(function(a, b) {
-    if (state.sort == 'lowest') {
-      return (a.max + a.min) * 0.5 - (b.max + b.min) * 0.5;
-    } else if (this.state.sort == 'highest') {
-      return (b.max + b.min) * 0.5 - (a.max + a.min) * 0.5;
-    }
-  });
-}
-
-function enterRows(rows) {
   rows.selectAll('.tag')
     .text(function(d) {
       return d.tag;
@@ -67,6 +57,20 @@ function enterRows(rows) {
     .text(function(d) {
       return d.max.toFixed(2);
     });  
+
+  rows.sort(function(a, b) {
+    if (state.sort == 'lowest') {
+      return (a.max + a.min) * 0.5 - (b.max + b.min) * 0.5;
+    } else if (this.state.sort == 'highest') {
+      return (b.max + b.min) * 0.5 - (a.max + a.min) * 0.5;
+    }
+  });
+}
+
+function enterRows(rows) {
+  var rows = d3.select('#viz-table')
+    .selectAll('.row')
+    .data(data, function(d,i) { return d.tag });
 
   var rowsEnter = rows
     .enter()
