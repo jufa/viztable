@@ -1,14 +1,25 @@
+
+function confidenceInterval(up, dn){
+  var lower = ((up + 1.9208) / (up + dn) - 1.96 * Math.sqrt((up *  dn) / (up +  dn) + 0.9604) / (up +  dn)) / (1 + 3.8416 / (up +  dn));
+  var upper = ((up + 1.9208) / (up + dn) + 1.96 * Math.sqrt((up *  dn) / (up +  dn) + 0.9604) / (up +  dn)) / (1 + 3.8416 / (up +  dn));
+  return [lower, upper];
+}
+
 function fakeData(datumCount) {
   data = [];
   var min, max;
   for (i=0; i < datumCount; i++) {
-    min = Math.random() * 0.75;
+    upvotes = Math.round(Math.random() * 100);
+    downvotes = Math.round(Math.random() * 100);
+    bounds = confidenceInterval(upvotes, downvotes);
     max = Math.min( 1.0, min + Math.random() * 0.5);
     data.push(
       {
         'tag': 'tag' + i,
-        'min': min,
-        'max': max,
+        'upvotes': upvotes,
+        'downvotes': downvotes,
+        'min': bounds[0],
+        'max': bounds[1],
       }
     )
   }
@@ -49,6 +60,14 @@ function updateRows(rows) {
     .text(function(d) {
       return d.tag;
     });
+  rows.selectAll('.upvotes')
+    .text(function(d) {
+      return d.upvotes;
+    });
+  rows.selectAll('.downvotes')
+    .text(function(d) {
+      return d.downvotes;
+    });
   rows.selectAll('.min')
     .text(function(d) {
       return d.min.toFixed(2);
@@ -72,12 +91,32 @@ function enterRows(rows) {
     .selectAll('.row')
     .data(data, function(d,i) { return d.tag });
 
+  var header = d3.select('#viz-table')
+    .append('tr')
+  
+  header.append('th')
+    .text('id');
+  header.append('th')
+    .text('upvotes');
+  header.append('th')
+    .text('downvotes');
+  header.append('th')
+    .text('lower');
+  header.append('th')
+    .text('upper');
+  header.append('th')
+    .text('viz');
+
   var rowsEnter = rows
     .enter()
     .append('tr')
     .classed('row', true)
   rowsEnter.append('td')
     .classed('tag', true)
+  rowsEnter.append('td')
+    .classed('upvotes', true)
+  rowsEnter.append('td')
+    .classed('downvotes', true)
   rowsEnter.append('td')
     .classed('min', true)
   rowsEnter.append('td')
